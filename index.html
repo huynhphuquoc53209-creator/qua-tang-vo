@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Huỳnh Quốc</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ffe0eb, #ffc2d8);
+        color:  #c2185b;
+        text-align: center;
+        padding: 30px 15px;
+    }
+    h1 {
+        font-size: 28px;
+    }
+    .gift {
+        font-size: 85px;
+    }
+    .amount {
+        font-size: 30PX;
+        font-weight: bold;      
+    }
+    button {
+        width: 100%;
+        padding: 15px;
+        margin-top: 15px;
+        background: #ed4b88;
+        color: white;
+        border: none;
+        boder-radius: 25px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #d92d70;
+    }
+    #message {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        background: #fff0f5;
+        border-radius: 15px;
+        line-height: 1.7;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+    <h1>💗 Chào vợ yêu Thanh Vân 💗</h1>
+
+    <p>Chồng có một món quà nhỏ dành cho Vợ!</p>
+
+    <div class="gift">🎁</div>
+
+    <p>Món quà đặc biệt của chồng</p>
+
+    <div class="amount">Bí mật @@</div>
+
+    <button onclick="receiveGift()">
+        NHẬN QUÀ Ở ĐÂY NÈ BÉ Thanh Vân Của Chồng ❤️
+    </button>
+
+    <div id="message"></div>
+</div>
+
+<script>
+    function receiveGift() {
+        const message = document.getElementById("message");
+
+        message.style.display = "block";
+
+        message.innerHTML = `
+            <h3>💌 Gửi mã QR cho chồng nhenn!</h3>
+
+            <p>
+                Vợ hãy chọn ảnh mã QR nhận tiền
+                để chồng kiểm tra và gửi quà nhé.
+            </p>
+
+            <input
+                type="file"
+                id="qrFile"
+                accept="image/*"
+            >
+
+            <button onclick="sendQR()">
+                GỬI MÃ QR CHO CHỒNG 💗
+            </button>
+
+            <p id="status"></p>
+        `;
+    }
+
+    async function sendQR() {
+    const input = document.getElementById("qrFile");
+    const message = document.getElementById("message");
+
+    if (!input || !input.files.length) {
+        alert("Vợ hãy chọn ảnh QR trước nhé!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("qr", input.files[0]);
+
+    try {
+        message.textContent = "Đang gửi ảnh QR Vợ iu chờ chút...";
+
+        const response = await fetch("/upload-qr", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            message.textContent = "❤️ " + result.message;
+        } else {
+            message.textContent = "⚠️ " + result.message;
+        }
+    } catch (error) {
+        message.textContent = "Không kết nối được máy chủ!";
+    }
+}
+
+  
+       
+</script>
+</body>
